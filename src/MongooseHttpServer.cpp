@@ -258,7 +258,7 @@ void MongooseHttpServer::eventHandler(struct mg_connection *nc, int ev, void *p,
 }
 
 #if MG_ENABLE_HTTP_WEBSOCKET
-#define ENABLE_DEBUG
+
 void MongooseHttpServer::sendTo(MongooseHttpWebSocketConnection *to, String &str)
 {
   mg_mgr *mgr = Mongoose.getMgr();
@@ -271,7 +271,6 @@ void MongooseHttpServer::sendTo(MongooseHttpWebSocketConnection *to, String &str
     to->send(WEBSOCKET_OP_TEXT, str.c_str(), str.length());
   }
 }
-#undef ENABLE_DEBUG
 void MongooseHttpServer::sendAll(MongooseHttpWebSocketConnection *from, const char *endpoint, int op, const void *data, size_t len)
 {
   mg_mgr *mgr = Mongoose.getMgr();
