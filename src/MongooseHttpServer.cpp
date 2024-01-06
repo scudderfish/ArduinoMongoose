@@ -258,6 +258,20 @@ void MongooseHttpServer::eventHandler(struct mg_connection *nc, int ev, void *p,
 }
 
 #if MG_ENABLE_HTTP_WEBSOCKET
+#define ENABLE_DEBUG
+void MongooseHttpServer::sendTo(MongooseHttpWebSocketConnection *to, String &str)
+{
+  mg_mgr *mgr = Mongoose.getMgr();
+
+  const struct mg_connection *c = to->getConnection();
+  if (c->flags & MG_F_IS_WEBSOCKET && c->flags & MG_F_IS_MongooseHttpWebSocketConnection)
+  {
+    MongooseHttpWebSocketConnection *to = (MongooseHttpWebSocketConnection *)c->user_connection_data;
+    DBUGF("%.*s sending to %p", to->uri().length(), to->uri().c_str(), to);
+    to->send(WEBSOCKET_OP_TEXT, str.c_str(), str.length());
+  }
+}
+#undef ENABLE_DEBUG
 void MongooseHttpServer::sendAll(MongooseHttpWebSocketConnection *from, const char *endpoint, int op, const void *data, size_t len)
 {
   mg_mgr *mgr = Mongoose.getMgr();

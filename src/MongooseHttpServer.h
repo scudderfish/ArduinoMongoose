@@ -433,6 +433,9 @@ class MongooseHttpServer
     void sendAll(const char *endpoint, String &str) {
       sendAll(endpoint, str.c_str());
     }
+
+    void sendTo(MongooseHttpWebSocketConnection *to, String &str);
+
 #endif
 #endif // MG_ENABLE_HTTP_WEBSOCKET
 };
