@@ -16,7 +16,7 @@
 
 #include "MongooseString.h"
 #include "MongooseHttp.h"
-
+#include <vector>
 // Make a copy of the HTTP header so it is avalible outside of the onReceive
 // callback. Setting to 0 will save some runtime memory but accessing the HTTP
 // message details outside of the onReceive callback will give undefined behaviour.
@@ -435,6 +435,7 @@ class MongooseHttpServer
     }
 
     void sendTo(MongooseHttpWebSocketConnection *to, String &str);
+    std::vector<IPAddress> getWebsocketClients(String url);
 
 #endif
 #endif // MG_ENABLE_HTTP_WEBSOCKET

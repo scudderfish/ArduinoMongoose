@@ -292,6 +292,35 @@ void MongooseHttpServer::sendAll(MongooseHttpWebSocketConnection *from, const ch
     }
   }
 }
+std::vector<IPAddress> MongooseHttpServer::getWebsocketClients(String url)
+{
+  std::vector<IPAddress> result;
+  mg_mgr *mgr = Mongoose.getMgr();
+
+  const struct mg_connection *nc = NULL;
+  struct mg_connection *c;
+  for (c = mg_next(mgr, NULL); c != NULL; c = mg_next(mgr, c))
+  {
+
+    if (c->flags & MG_F_IS_WEBSOCKET && c->flags & MG_F_IS_MongooseHttpWebSocketConnection)
+    {
+      MongooseHttpWebSocketConnection *to = (MongooseHttpWebSocketConnection *)c->user_connection_data;
+      if (to->uri().equals(url))
+      {
+
+        char addr[32];
+        mg_sock_addr_to_str(&c->sa, addr, sizeof(addr), MG_SOCK_STRINGIFY_IP);
+
+        IPAddress remote;
+
+        remote.fromString((const char *)addr);
+        result.push_back(remote);
+      }
+    }
+  }
+  return result;
+}
+
 #endif
 
 /// MongooseHttpServerRequest object
